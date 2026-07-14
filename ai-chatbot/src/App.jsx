@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { GoogleGenAI } from "@google/genai";
-import { Chat } from "./components/Chat/Chat";
-import { Controls } from "./components/Controls/Controls";
-import styles from "./App.module.css";
 
-const ai = new GoogleGenAI({
-  apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
-});
+import { useState } from "react";
+import { Controls } from "./components/Controls/Controls";
+import { Chat } from "./components/Chat/Chat";
+import styles from "./App.module.css";
+import { Assistant } from "./assistants/googleai";
 
 function App() {
+  const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
 
   function addMessage(message) {
@@ -16,27 +14,14 @@ function App() {
   }
 
   async function handleContentSend(content) {
-    addMessage({
-      content,
-      role: "user",
-    });
-
+    addMessage({ content, role: "user" });
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: content,
-      });
-
-      addMessage({
-        content: response.text,
-        role: "assistant",
-      });
+      const result = await assistant.chat(content);
+      addMessage({ content: result, role: "assistant" });
     } catch (error) {
-      console.error("Full Error:", error);
-
       addMessage({
+        content: "Sorry, I couldn't process your request. Please try again!",
         role: "system",
-        content: error.message || "Something went wrong.",
       });
     }
   }
@@ -44,14 +29,12 @@ function App() {
   return (
     <div className={styles.App}>
       <header className={styles.Header}>
-        <img className={styles.Logo} src="/chat.webp" alt="Logo" />
+        <img className={styles.Logo} src="/chat.webp" />
         <h2 className={styles.Title}>AI Chatbot</h2>
       </header>
-
       <div className={styles.ChatContainer}>
         <Chat messages={messages} />
       </div>
-
       <Controls onSend={handleContentSend} />
     </div>
   );
