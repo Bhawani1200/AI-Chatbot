@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Controls } from "./components/Controls/Controls";
 import { Chat } from "./components/Chat/Chat";
 import styles from "./App.module.css";
-import { Assistant } from "./assistants/googleai";
+// import { Assistant } from "./assistants/googleai";
+import { Assistant } from "./assistants/openai";
 
 function App() {
   const assistant = new Assistant();
