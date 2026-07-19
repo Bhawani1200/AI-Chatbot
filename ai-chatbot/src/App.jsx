@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Controls } from "./components/Controls/Controls";
 import { Chat } from "./components/Chat/Chat";
 import styles from "./App.module.css";
-// import { Assistant } from "./assistants/googleai";
-import { Assistant } from "./assistants/openai";
+import { Assistant } from "./assistants/googleai";
+// import { Assistant } from "./assistants/openai";
+import { Loader } from "./components/Loader/Loader";
 
 function App() {
   const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(false);
 
   function addMessage(message) {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -28,6 +31,7 @@ function App() {
 
   return (
     <div className={styles.App}>
+            {isLoading && <Loader />}
       <header className={styles.Header}>
         <img className={styles.Logo} src="/chat.webp" />
         <h2 className={styles.Title}>AI Chatbot</h2>
