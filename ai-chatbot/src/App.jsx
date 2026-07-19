@@ -18,6 +18,7 @@ function App() {
 
   async function handleContentSend(content) {
     addMessage({ content, role: "user" });
+    setIsLoading(true);
     try {
       const result = await assistant.chat(content);
       addMessage({ content: result, role: "assistant" });
@@ -26,6 +27,8 @@ function App() {
         content: "Sorry, I couldn't process your request. Please try again!",
         role: "system",
       });
+    }finally{
+      setIsLoading(false);
     }
   }
 
