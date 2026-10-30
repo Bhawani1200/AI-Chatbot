@@ -13,6 +13,7 @@ export function Chat({ messages }) {
           {content}
         </div>
       ))}
+      <div />
     </div>
   );
 }

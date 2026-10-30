@@ -7,14 +7,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: #f3f3f3;
+  background: var(--page-bg);
   opacity: 0.6;
 }
 
 .Loader {
   width: 60px;
   aspect-ratio: 2;
-  --_g: no-repeat radial-gradient(circle closest-side, #0d0d0d 90%, #0d0d0d00);
+  --_g: no-repeat radial-gradient(circle closest-side, var(--loader-dot) 90%, transparent);
   background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
   background-size: calc(100% / 3) 50%;
   animation: l3 1s infinite linear;

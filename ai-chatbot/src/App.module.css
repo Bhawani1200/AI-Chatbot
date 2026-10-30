@@ -12,8 +12,8 @@
 }
 
 .Logo {
-  width: 150px;
-  height: 150px;
+  width: 64px;
+  height: 64px;
 }
 
 .Title {
@@ -23,7 +23,7 @@
 .ChatContainer {
   flex-grow: 1;
   width: 100%;
-  background: #ffffff;
+  background: var(--chat-bg);
   border-radius: 16px;
   overflow-y: auto;
 }

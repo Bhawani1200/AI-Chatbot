@@ -143,13 +143,35 @@ button:focus-visible {
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #0d0d0d;
-  background: #f3f3f3;
+  --page-bg: #f3f3f3;
+  --text-color: #0d0d0d;
+  --chat-bg: #ffffff;
+  --user-message-bg: #f3f3f3;
+  --input-bg: #ffffff;
+  --send-button-bg: #0d0d0d;
+  --send-button-icon: #f3f3f3;
+  --loader-dot: #0d0d0d;
+  color: var(--text-color);
+  background: var(--page-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #171717;
+    --text-color: #ececec;
+    --chat-bg: #212121;
+    --user-message-bg: #303030;
+    --input-bg: #303030;
+    --send-button-bg: #ececec;
+    --send-button-icon: #171717;
+    --loader-dot: #ececec;
+    color-scheme: dark;
+  }
 }
 
 * {
