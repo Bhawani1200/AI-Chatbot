@@ -7,8 +7,7 @@
 
 .TextAreaContainer {
   flex-grow: 1;
-  padding: 8px 16px;
-  line-height: 0;
+  padding: 12px 18px;
   border-radius: 16px;
   background: var(--input-bg);
 }
@@ -21,14 +20,17 @@
   resize: none;
   color: var(--text-color);
   background: var(--input-bg);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .Button {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
   outline: none;

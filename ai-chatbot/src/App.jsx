@@ -3,14 +3,14 @@ import { Controls } from "./components/Controls/Controls";
 import { Chat } from "./components/Chat/Chat";
 import styles from "./App.module.css";
 import { Assistant } from "./assistants/googleai";
-// import { Assistant } from "./assistants/openai";
 import { Loader } from "./components/Loader/Loader";
 
 function App() {
-  const assistant = new Assistant();
+  const [assistant] = useState(() => new Assistant());
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   function addMessage(message) {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -19,22 +19,57 @@ function App() {
   async function handleContentSend(content) {
     addMessage({ content, role: "user" });
     setIsLoading(true);
+
+    function updateLastMessageContent(content) {
+      setMessages((prevMessages) =>
+        prevMessages.map((message, index) =>
+          index === prevMessages.length - 1
+            ? { ...message, content: message.content + content }
+            : message,
+        ),
+      );
+    }
+
     try {
-      const result = await assistant.chat(content);
-      addMessage({ content: result, role: "assistant" });
+      const result = await assistant.chatStream(content, messages);
+      let isFirstChunk = true;
+      for await (const chunk of result) {
+        if (isFirstChunk) {
+          isFirstChunk = false;
+          addMessage({ content: "", role: "assistant" });
+          setIsLoading(false);
+          setIsStreaming(true);
+        }
+        updateLastMessageContent(chunk);
+      }
+      setIsStreaming(false);
     } catch (error) {
+      const errorDetails =
+        typeof error?.message === "string"
+          ? error.message.slice(0, 400)
+          : "No additional details were provided.";
+      let errorMessage = "Sorry, I couldn't process your request. Please try again.";
+
+      if (error?.status === 429) {
+        errorMessage =
+          "Gemini API quota or rate limit reached. Check your Google AI Studio usage and billing, then try again.";
+      } else if (error?.status) {
+        errorMessage = `Gemini API error (${error.status}): ${errorDetails}`;
+      }
+
       addMessage({
-        content: "Sorry, I couldn't process your request. Please try again!",
+        content: errorMessage,
         role: "system",
       });
-    }finally{
+    } finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   }
 
   return (
     <div className={styles.App}>
-            {isLoading && <Loader />}
+      {isLoading && <Loader />}
       <header className={styles.Header}>
         <img className={styles.Logo} src="/chat.webp" />
         <h2 className={styles.Title}>AI Chatbot</h2>
@@ -42,7 +77,10 @@ function App() {
       <div className={styles.ChatContainer}>
         <Chat messages={messages} />
       </div>
-      <Controls onSend={handleContentSend} onDisabled={isLoading}/>
+      <Controls
+        onSend={handleContentSend}
+        isDisabled={isLoading || isStreaming}
+      />
     </div>
   );
 }

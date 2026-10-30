@@ -1,26 +1,49 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
-const googleai = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY);
-console.log(import.meta.env.VITE_GOOGLE_API_KEY);
-
-// const googleai = new GoogleGenAI({
-//   apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
-// });
+const googleai = new GoogleGenAI({
+  apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+});
 
 export class Assistant {
   #chat;
 
   constructor(model = "gemini-3.5-flash") {
-    const gemini = googleai.getGenerativeModel({ model });
-    this.#chat = gemini.startChat({ history: [] });
+    this.#chat = googleai.chats.create({
+      model,
+      config: {
+        maxOutputTokens: 8192,
+        systemInstruction:
+          "Answer in a concise, conversational way. Give the direct answer first, use short paragraphs or a few bullets when helpful, and only provide a detailed explanation when the user asks for one.",
+      },
+    });
   }
 
   async chat(content) {
-    try {
-      const result = await this.#chat.sendMessage(content);
-      return result.response.text();
-    } catch (error) {
-      throw error;
+    const result = await this.#chat.sendMessage({ message: content });
+    return result.text;
+  }
+
+  async *chatStream(content) {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      let hasYieldedContent = false;
+
+      try {
+        const stream = await this.#chat.sendMessageStream({ message: content });
+        for await (const chunk of stream) {
+          const text = chunk.text;
+          if (text) {
+            hasYieldedContent = true;
+            yield text;
+          }
+        }
+        return;
+      } catch (error) {
+        if (hasYieldedContent || error?.status !== 503 || attempt === 2) {
+          throw error;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** attempt));
+      }
     }
   }
 }
