@@ -13,7 +13,8 @@
     "@google/generative-ai": "^0.24.1",
     "openai": "^6.47.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "react-textarea-autosize": "^8.5.9"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
