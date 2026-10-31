@@ -6,6 +6,7 @@ import styles from "./App.module.css";
 import { Assistant } from "./assistants/googleai";
 // import { Assistant } from "./assistants/openai";
 // import { Assistant } from "./assistants/deepseekai";
+// import { Assistant } from "./assistants/anthropicai";
 import { Loader } from "./components/Loader/Loader";
 
 function App() {
