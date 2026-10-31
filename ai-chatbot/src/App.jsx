@@ -50,9 +50,11 @@ function App() {
           : "No additional details were provided.";
       let errorMessage = "Sorry, I couldn't process your request. Please try again.";
 
-      if (error?.status === 429) {
+      if (error?.status === 402) {
         errorMessage =
-          "Gemini API quota or rate limit reached. Check your Google AI Studio usage and billing, then try again.";
+          "Gemini API returned a payment error. Check Google AI Studio to confirm access is available for your API key.";
+      } else if (error?.status === 429) {
+        errorMessage = `Gemini API limit reached: ${errorDetails}. Check your Google AI Studio quota and retry time.`;
       } else if (error?.status) {
         errorMessage = `Gemini API error (${error.status}): ${errorDetails}`;
       }

@@ -7,11 +7,11 @@ const googleai = new GoogleGenAI({
 export class Assistant {
   #chat;
 
-  constructor(model = "gemini-3.5-flash") {
+  constructor(model = "gemini-3.5-flash-lite") {
     this.#chat = googleai.chats.create({
       model,
       config: {
-        maxOutputTokens: 8192,
+        maxOutputTokens: 2048,
         systemInstruction:
           "Answer in a concise, conversational way. Give the direct answer first, use short paragraphs or a few bullets when helpful, and only provide a detailed explanation when the user asks for one.",
       },
