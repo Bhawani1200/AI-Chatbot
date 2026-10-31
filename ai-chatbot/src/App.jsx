@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Controls } from "./components/Controls/Controls";
 import { Chat } from "./components/Chat/Chat";
 import styles from "./App.module.css";
+// import { Assistant } from "./assistants/grokai";
 import { Assistant } from "./assistants/googleai";
+// import { Assistant } from "./assistants/openai";
+// import { Assistant } from "./assistants/deepseekai";
 import { Loader } from "./components/Loader/Loader";
 
 function App() {
@@ -45,18 +48,22 @@ function App() {
       setIsStreaming(false);
     } catch (error) {
       const errorDetails =
-        typeof error?.message === "string"
-          ? error.message.slice(0, 400)
+        typeof error?.error?.message === "string"
+          ? error.error.message.slice(0, 1000)
+          : typeof error?.message === "string"
+          ? error.message.slice(0, 1000)
           : "No additional details were provided.";
       let errorMessage = "Sorry, I couldn't process your request. Please try again.";
 
       if (error?.status === 402) {
-        errorMessage =
-          "Gemini API returned a payment error. Check Google AI Studio to confirm access is available for your API key.";
+        errorMessage = `AI API payment error (402): ${errorDetails}`;
       } else if (error?.status === 429) {
-        errorMessage = `Gemini API limit reached: ${errorDetails}. Check your Google AI Studio quota and retry time.`;
+        errorMessage = `AI API rate limit reached (429): ${errorDetails}`;
       } else if (error?.status) {
-        errorMessage = `Gemini API error (${error.status}): ${errorDetails}`;
+        errorMessage = `AI API error (${error.status}): ${errorDetails}`;
+        if (error.status === 400) {
+          errorMessage += " Check the model name and request parameters.";
+        }
       }
 
       addMessage({
