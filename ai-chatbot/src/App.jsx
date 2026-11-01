@@ -2,18 +2,14 @@ import { useState } from "react";
 import { Controls } from "./components/Controls/Controls";
 import { Chat } from "./components/Chat/Chat";
 import styles from "./App.module.css";
-// import { Assistant } from "./assistants/grokai";
-import { Assistant } from "./assistants/googleai";
-// import { Assistant } from "./assistants/openai";
-// import { Assistant } from "./assistants/deepseekai";
-// import { Assistant } from "./assistants/anthropicai";
 import { Loader } from "./components/Loader/Loader";
+import { Assistant } from "./components/Assistant/Assistant";
+import { Theme } from "./components/Theme/Theme";
 
 function App() {
-  const [assistant] = useState(() => new Assistant());
+  const [assistant, setAssistant] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const [isStreaming, setIsStreaming] = useState(false);
 
   function addMessage(message) {
@@ -52,9 +48,10 @@ function App() {
         typeof error?.error?.message === "string"
           ? error.error.message.slice(0, 1000)
           : typeof error?.message === "string"
-          ? error.message.slice(0, 1000)
-          : "No additional details were provided.";
-      let errorMessage = "Sorry, I couldn't process your request. Please try again.";
+            ? error.message.slice(0, 1000)
+            : "No additional details were provided.";
+      let errorMessage =
+        "Sorry, I couldn't process your request. Please try again.";
 
       if (error?.status === 402) {
         errorMessage = `AI API payment error (402): ${errorDetails}`;
@@ -89,8 +86,13 @@ function App() {
       </div>
       <Controls
         onSend={handleContentSend}
-        isDisabled={isLoading || isStreaming}
+        isDisabled={!assistant || isLoading || isStreaming}
       />
+    
+      <div className={styles.Configuration}>
+        <Assistant onChange={setAssistant} />
+        <Theme />
+      </div>
     </div>
   );
 }

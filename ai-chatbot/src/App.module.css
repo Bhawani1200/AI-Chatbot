@@ -27,3 +27,12 @@
   border-radius: 16px;
   overflow-y: auto;
 }
+
+.Configuration {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  opacity: 0.8;
+}

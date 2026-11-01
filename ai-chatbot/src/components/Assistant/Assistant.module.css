@@ -1,0 +1,12 @@
+.Assistant {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.Assistant select {
+  padding: 6px 10px;
+  font: inherit;
+}

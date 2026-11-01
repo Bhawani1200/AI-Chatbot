@@ -1,0 +1,11 @@
+.Theme {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.Theme select {
+  padding: 6px 10px;
+  font: inherit;
+}

@@ -50,7 +50,7 @@ export class Assistant {
   #parseError(error) {
     try {
       return error.error.error;
-    } catch (parseError) {
+    } catch {
       return error;
     }
   }
