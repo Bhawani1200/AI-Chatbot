@@ -5,6 +5,7 @@ import styles from "./App.module.css";
 import { Loader } from "./components/Loader/Loader";
 import { Assistant } from "./components/Assistant/Assistant";
 import { Theme } from "./components/Theme/Theme";
+import { Sidebar } from "./components/Sidebar/Sidebar";
 
 function App() {
   const [assistant, setAssistant] = useState(null);
@@ -81,17 +82,22 @@ function App() {
         <img className={styles.Logo} src="/chat.webp" />
         <h2 className={styles.Title}>AI Chatbot</h2>
       </header>
-      <div className={styles.ChatContainer}>
-        <Chat messages={messages} />
-      </div>
-      <Controls
-        onSend={handleContentSend}
-        isDisabled={!assistant || isLoading || isStreaming}
-      />
-    
-      <div className={styles.Configuration}>
-        <Assistant onChange={setAssistant} />
-        <Theme />
+
+      <div className={styles.Content}>
+        <Sidebar />
+        <main className={styles.Main}>
+          <div className={styles.ChatContainer}>
+            <Chat messages={messages} />
+          </div>
+          <Controls
+            onSend={handleContentSend}
+            isDisabled={!assistant || isLoading || isStreaming}
+          />
+          <div className={styles.Configuration}>
+            <Assistant onChange={setAssistant} />
+            <Theme />
+          </div>
+        </main>
       </div>
     </div>
   );
