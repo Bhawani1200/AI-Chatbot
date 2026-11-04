@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
-import styles from "./Assistant.module.css";
-import { Assistant as GoogleAIAssistant } from "../../assistants/googleai.js";
-import { Assistant as OpenAIAssistant } from "../../assistants/openai.js";
-import { Assistant as DeepSeekAIAssistant } from "../../assistants/deepseekai.js";
-import { Assistant as AnthropicAIAssistant } from "../../assistants/anthropicai.js";
+import { Assistant as GoogleAIAssistant } from "../../assistants/googleai";
+import { Assistant as OpenAIAssistant } from "../../assistants/openai";
+import { Assistant as DeepSeekAIAssistant } from "../../assistants/deepseekai";
+import { Assistant as AnthropicAIAssistant } from "../../assistants/anthropicai";
 import { Assistant as XAIAssistant } from "../../assistants/grokai.js";
+import styles from "./Assistant.module.css";
 
-const assistantOptions = {
-  googleai: "Google AI",
-  openai: "OpenAI",
-  deepseekai: "DeepSeek AI",
-  anthropicai: "Anthropic AI",
-  xai: "X AI",
-};
-
-const assistantClasses = {
+const assistantMap = {
   googleai: GoogleAIAssistant,
   openai: OpenAIAssistant,
   deepseekai: DeepSeekAIAssistant,
@@ -22,36 +14,52 @@ const assistantClasses = {
   xai: XAIAssistant,
 };
 
-function createAssistant(provider) {
-  const AssistantClass = assistantClasses[provider];
-  if (!AssistantClass) {
-    throw new Error(`Unknown assistant provider: ${provider}`);
-  }
-  return new AssistantClass();
-}
-
-export function Assistant({ value = "googleai", onChange }) {
-  const [selectedAssistant, setSelectedAssistant] = useState(value);
-
-  useEffect(() => {
-    onChange(createAssistant(value));
-  }, [onChange, value]);
+export function Assistant({ onAssistantChange }) {
+  const [value, setValue] = useState("googleai:gemini-3.5-flash-lite");
 
   function handleValueChange(event) {
-    const nextAssistant = event.target.value;
-    setSelectedAssistant(nextAssistant);
-    onChange(createAssistant(nextAssistant));
+    setValue(event.target.value);
   }
+
+  useEffect(() => {
+    const [assistant, model] = value.split(":");
+    const AssistantClass = assistantMap[assistant];
+
+    if (!AssistantClass) {
+      throw new Error(`Unknown assistant: ${assistant} or model: ${model}`);
+    }
+
+    onAssistantChange(new AssistantClass(model));
+  }, [value]);
 
   return (
     <div className={styles.Assistant}>
       <span>Assistant:</span>
-      <select value={selectedAssistant} onChange={handleValueChange}>
-        {Object.entries(assistantOptions).map(([assistant, label]) => (
-          <option key={assistant} value={assistant}>
-            {label}
+      <select defaultValue={value} onChange={handleValueChange}>
+        <optgroup label="Google AI">
+          <option value="googleai:gemini-3.5-flash-lite">
+            Gemini 3.5 Flash-Lite
           </option>
-        ))}
+        </optgroup>
+
+        <optgroup label="Open AI">
+          <option value="openai:gpt-4o-mini">GPT-4o mini</option>
+          <option value="openai:chatgpt-4o-latest">ChatGPT-4o</option>
+        </optgroup>
+
+        <optgroup label="DeepSeek AI">
+          <option value="deepseekai:deepseek-chat">DeepSeek-V3</option>
+        </optgroup>
+
+        <optgroup label="Anthropic AI">
+          <option value="anthropicai:claude-3-5-haiku-latest">
+            Claude 3.5 Haiku
+          </option>
+        </optgroup>
+
+        <optgroup label="X AI">
+          <option value="xai:grok-3-mini-latest">Grok 3 Mini</option>
+        </optgroup>
       </select>
     </div>
   );
