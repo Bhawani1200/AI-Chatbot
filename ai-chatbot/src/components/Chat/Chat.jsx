@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Loader }  from "../Loader/Loader";
+import { useEffect, useState } from "react";
+import { Loader } from "../Loader/Loader";
 import { Messages } from "../Messages/Messages";
 import { Controls } from "../Controls/Controls";
 import styles from "./Chat.module.css";
 
-export function Chat({ assistant }) {
+export function Chat({ assistant, chatId, chatMessages }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -14,10 +14,14 @@ export function Chat({ assistant }) {
       prevMessages.map((message, index) =>
         index === prevMessages.length - 1
           ? { ...message, content: `${message.content}${content}` }
-          : message
-      )
+          : message,
+      ),
     );
   }
+
+  useEffect(() => {
+    setMessages(chatMessages);
+  }, [chatId]);
 
   function addMessage(message) {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -29,7 +33,7 @@ export function Chat({ assistant }) {
     try {
       const result = await assistant.chatStream(
         content,
-        messages.filter(({ role }) => role !== "system")
+        messages.filter(({ role }) => role !== "system"),
       );
 
       let isFirstChunk = false;
