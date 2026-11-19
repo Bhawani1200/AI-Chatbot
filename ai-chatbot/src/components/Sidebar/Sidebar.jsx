@@ -4,6 +4,7 @@ import styles from "./Sidebar.module.css";
 export function Sidebar({
   chats,
   activeChatId,
+  activeChatMessages,
   onActiveChatIdChange,
   onNewChatCreate,
 }) {
@@ -38,7 +39,11 @@ export function Sidebar({
         <MenuIcon />
       </button>
       <div id="chat-sidebar" className={styles.Sidebar} data-open={isOpen}>
-        <button className={styles.NewChatButton} onClick={onNewChatCreate}>
+        <button
+          className={styles.NewChatButton}
+          disabled={activeChatMessages.length === 0}
+          onClick={onNewChatCreate}
+        >
           New Chat
         </button>
         <ul className={styles.Chats}>

@@ -77,6 +77,7 @@ function App() {
         <Sidebar
           chats={chats}
           activeChatId={activeChatId}
+          activeChatMessages={activeChatMessages}
           onActiveChatIdChange={setActiveChatId}
           onNewChatCreate={handleNewChatCreate}
         />
