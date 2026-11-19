@@ -45,8 +45,17 @@ function App() {
   }
 
   function handleChatMessagesUpdate(messages) {
-    updateChats(messages);
+    const title = messages[0]?.content.split(" ").slice(0, 7).join(" ");
+
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === activeChatId
+          ? { ...chat, title: chat.title ?? title, messages }
+          : chat,
+      ),
+    );
   }
+
 
   function updateChats(messages = []) {
     setChats((prevChats) =>
@@ -62,7 +71,7 @@ function App() {
     setActiveChatId(id);
     setChats((prevChats) => [
       ...prevChats,
-      { id, title: "New Chat", messages: [] },
+      { id, messages: [] },
     ]);
   }
 
