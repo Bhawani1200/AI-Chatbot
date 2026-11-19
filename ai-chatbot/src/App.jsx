@@ -4,7 +4,7 @@ import { Chat } from "./components/Chat/Chat";
 import { Assistant } from "./components/Assistant/Assistant";
 import { Theme } from "./components/Theme/Theme";
 import styles from "./App.module.css";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const CHATS = [
   {
@@ -66,6 +66,13 @@ function App() {
     ]);
   }
 
+  function handleActiveChatIdChange(id) {
+    setActiveChatId(id);
+    setChats((prevChats) =>
+      prevChats.filter(({ messages }) => messages.length > 0),
+    );
+  }
+
   return (
     <div className={styles.App}>
       <header className={styles.Header}>
@@ -78,7 +85,7 @@ function App() {
           chats={chats}
           activeChatId={activeChatId}
           activeChatMessages={activeChatMessages}
-          onActiveChatIdChange={setActiveChatId}
+          onActiveChatIdChange={handleActiveChatIdChange}
           onNewChatCreate={handleNewChatCreate}
         />
 

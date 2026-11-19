@@ -47,18 +47,20 @@ export function Sidebar({
           New Chat
         </button>
         <ul className={styles.Chats}>
-          {chats.map((chat) => (
-            <li
-              key={chat.id}
-              className={styles.Chat}
-              data-active={chat.id === activeChatId}
-              onClick={() => handleChatClick(chat.id)}
-            >
-              <button className={styles.ChatButton}>
-                <div className={styles.ChatTitle}>{chat.title}</div>
-              </button>
-            </li>
-          ))}
+          {chats
+            .filter(({ messages }) => messages.length > 0)
+            .map((chat) => (
+              <li
+                key={chat.id}
+                className={styles.Chat}
+                data-active={chat.id === activeChatId}
+                onClick={() => handleChatClick(chat.id)}
+              >
+                <button className={styles.ChatButton}>
+                  <div className={styles.ChatTitle}>{chat.title}</div>
+                </button>
+              </li>
+            ))}
         </ul>
       </div>
       {isOpen && (
