@@ -26,6 +26,9 @@ export function Chat({
 
   useEffect(() => {
     setMessages(chatMessages);
+    if (assistant?.name === "googleai") {
+      assistant.createChat(chatMessages);
+    }
   }, [chatId]);
 
   useEffect(() => {

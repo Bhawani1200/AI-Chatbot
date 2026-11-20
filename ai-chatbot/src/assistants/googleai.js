@@ -6,6 +6,7 @@ const googleai = new GoogleGenAI({
 
 export class Assistant {
   #chat;
+  name = "googleai";
 
   constructor(model = "gemini-3.5-flash-lite") {
     this.#chat = googleai.chats.create({
@@ -15,6 +16,18 @@ export class Assistant {
         systemInstruction:
           "Answer in a concise, conversational way. Give the direct answer first, use short paragraphs or a few bullets when helpful, and only provide a detailed explanation when the user asks for one.",
       },
+    });
+  }
+
+  createChat(history) {
+    this.#chat = googleai.chats.create({
+      model: this.#chat.model,
+      history: history
+        .filter(({ role }) => role !== "system")
+        .map(({ content, role }) => ({
+          parts: [{ text: content }],
+          role: role === "assistant" ? "model" : role,
+        })),
     });
   }
 
@@ -42,7 +55,9 @@ export class Assistant {
           throw error;
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** attempt));
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * 2 ** attempt),
+        );
       }
     }
   }
