@@ -56,7 +56,6 @@ function App() {
     );
   }
 
-
   function updateChats(messages = []) {
     setChats((prevChats) =>
       prevChats.map((chat) =>
@@ -69,10 +68,7 @@ function App() {
     const id = uuidv4();
 
     setActiveChatId(id);
-    setChats((prevChats) => [
-      ...prevChats,
-      { id, messages: [] },
-    ]);
+    setChats((prevChats) => [...prevChats, { id, messages: [] }]);
   }
 
   function handleActiveChatIdChange(id) {
@@ -100,9 +96,11 @@ function App() {
 
         <main className={styles.Main}>
           <Chat
+            key={activeChatId}
             assistant={assistant}
-            chatMessages={activeChatMessages}
+            isActive
             chatId={activeChatId}
+            chatMessages={activeChatMessages}
             onChatMessagesUpdate={handleChatMessagesUpdate}
           />
           <div className={styles.Configuration}>

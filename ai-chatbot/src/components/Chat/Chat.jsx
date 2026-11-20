@@ -7,6 +7,7 @@ import styles from "./Chat.module.css";
 export function Chat({
   assistant,
   chatId,
+  isActive = false,
   chatMessages,
   onChatMessagesUpdate,
 }) {
@@ -72,6 +73,8 @@ export function Chat({
       setIsStreaming(false);
     }
   }
+
+  if (!isActive) return null;
 
   return (
     <>
